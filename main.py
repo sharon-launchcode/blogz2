@@ -40,6 +40,7 @@ def index():
 def display_blogs():
     blogs = Blog.query.all()
     return render_template("blog.html")
+    # return Blog.query.all()
 
 
 
