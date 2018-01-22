@@ -6,17 +6,17 @@ app.config['DEBUG'] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://blogz:ok@localhost:8889/blogz'
 app.config['SQLALCHEMY_ECHO'] = True
 db = SQLAlchemy(app)
-app.secret_key = 'y337kGcys&zP3B'
+app.secret_key = '929cd6a8c076fba19ba288f1a2f6ed87'
 
 from models import db, User, Blog
 
-# TODO start make session definitive either email or user id
+# TODO investigate whether  make session definitive either email or user id
 @app.before_request
 def require_login():
-    allowed_routes = ['index', 'login', 'signup']
+    allowed_routes = ['index', 'blog', 'login', 'signup']
     if request.endpoint not in allowed_routes and 'email' not in session:
         return redirect('/login')
-# TODO end make session definitive either email or user id
+# TODO end project uses email as a user so keep session associated with email
 
 @app.route("/")
 def index():
@@ -102,20 +102,20 @@ def validate_fields():
 
 
     if not username_error and not password_error and not verify_error and not pw_error and not email_error:
-        return render_template('hello_greeting.html', username = username)
+        return render_template('new_post.html', username = username)
 
     else:
-        return render_template('hello_form.html', pw_error=pw_error, username_error=username_error, password_error=password_error, verify_error=verify_error, email_error=email_error,
-        username=username, password=password, pw2=pw2, email=email)
+        return render_template('signup.html', pw_error=pw_error, username_error=username_error, password_error=password_error, verify_error=verify_error, email_error=email_error,
+        username=username, password=password, email=email)
 # TODO end of validation pw needs to be aligned with words password and verification 
 
-# TODO start check how sessions are defined and decide whether email or user id 
+# TODO start compare sessions are defined and decide whether email or user id 
 @app.route('/logout')
 def logout():
     del session['email']
     #del session['user_id']
     return redirect('/')
-# TODO end check on sessions to be defined as user id or email
+# TODO end for this project use email associated with session email is used as a user ide
 
 @app.route('/blog', methods=['POST', 'GET'])
 def blog_listing():
@@ -124,6 +124,7 @@ def blog_listing():
         blog_title = request.form['title']
         new_blog = Blog(blog_title)
         db.session.add(new_blog)
+        db.session.flush # from Adnan's example
         db.session.commit()
 
     blogs = Blog.query.all()
@@ -154,16 +155,6 @@ def register():
 
     return render_template('signup.html')            
 
-@app.route('/blog', methods=['GET'])
-def display_post():
-    posts = Blog.query.all()
-    if len(request.args) != 0:
-        #writeup_id = request.args.get("id")
-        #writeup = Blog.query.get(writeup_id)
-
-        return render_template('writeup.html', writeup=writeup)
-
-    return render_template('blog.html', posts=posts)
 
 @app.route('/newpost', methods=['POST', 'GET'])
 def new_post():
