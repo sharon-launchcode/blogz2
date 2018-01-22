@@ -10,12 +10,17 @@ app.secret_key = 'y337kGcys&zP3B'
 
 from models import db, User, Blog
 
+# TODO start make session definitive either email or user id
 @app.before_request
 def require_login():
     allowed_routes = ['index', 'login', 'signup']
     if request.endpoint not in allowed_routes and 'email' not in session:
         return redirect('/login')
+# TODO end make session definitive either email or user id
 
+@app.route("/")
+def index():
+    return render_template("index.html")
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
@@ -103,11 +108,14 @@ def validate_fields():
         return render_template('hello_form.html', pw_error=pw_error, username_error=username_error, password_error=password_error, verify_error=verify_error, email_error=email_error,
         username=username, password=password, pw2=pw2, email=email)
 # TODO end of validation pw needs to be aligned with words password and verification 
+
+# TODO start check how sessions are defined and decide whether email or user id 
 @app.route('/logout')
 def logout():
     del session['email']
+    #del session['user_id']
     return redirect('/')
-
+# TODO end check on sessions to be defined as user id or email
 
 @app.route('/blog', methods=['POST', 'GET'])
 def blog_listing():
