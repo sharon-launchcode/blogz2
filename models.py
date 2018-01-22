@@ -16,16 +16,17 @@ class Blog(db.Model):
         self.body = body
         self.owner_id = owner_id
 
-
+# TODO below class Comment not incorporated into project hold this example for possible meta use
 class Comment(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.String(500))
-    owner_id1 = db.Column(db.Integer,db.ForeignKey('user.id'))
+    commentowner_id = db.Column(db.Integer,db.ForeignKey('user.id'))
 
     def __init__(self, text, owner_id):
         self.text = text
-        self.owner_id1 = owner_id1
+        self.commentowner_id1 = commentowner_id
+# TODO above class Comment is not incorporated into project to incorporate import via main.py if used      
 
 
 class User(db.Model):

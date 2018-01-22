@@ -10,6 +10,17 @@ app.secret_key = '929cd6a8c076fba19ba288f1a2f6ed87'
 
 from models import db, User, Blog
 
+
+
+@app.route("/")
+def index():
+    return render_template("index.html")
+
+@app.route("/blog")
+def display_blogs():
+    blogs = Blog.query.all()
+    return render_template("blog.html")
+
 # TODO investigate whether  make session definitive either email or user id
 @app.before_request
 def require_login():
@@ -17,10 +28,6 @@ def require_login():
     if request.endpoint not in allowed_routes and 'email' not in session:
         return redirect('/login')
 # TODO end project uses email as a user so keep session associated with email
-
-@app.route("/")
-def index():
-    return render_template("index.html")
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
@@ -117,20 +124,6 @@ def logout():
     return redirect('/')
 # TODO end for this project use email associated with session email is used as a user ide
 
-@app.route('/blog', methods=['POST', 'GET'])
-def blog_listing():
-
-    if request.method == 'POST':
-        blog_title = request.form['title']
-        new_blog = Blog(blog_title)
-        db.session.add(new_blog)
-        db.session.flush # from Adnan's example
-        db.session.commit()
-
-    blogs = Blog.query.all()
-    return render_template('blog.html',title="Blog!", blogs=blogs)
-
-
 @app.route('/signup', methods=['POST', 'GET'])
 def register():
     if request.method == 'POST':
@@ -180,7 +173,7 @@ def new_post():
 
 @app.route('/newpost', methods=['POST', 'GET'])        
 
-
+# TODO add delete only if logged in
 @app.route('/delete-blog', methods=['POST'])
 def delete_blog():
 
