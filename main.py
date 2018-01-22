@@ -8,27 +8,7 @@ app.config['SQLALCHEMY_ECHO'] = True
 db = SQLAlchemy(app)
 app.secret_key = 'y337kGcys&zP3B'
 
-
-class Blog(db.Model):
-
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(120))
-    body = db.Column(db.String(500))
-
-    def __init__(self, title, body):
-        self.title = title
-        self.body = body
-
-class User(db.Model):
-
-    id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(120), unique=True)
-    password = db.Column(db.String(120))
-    tasks = db.relationship('Blog', backref='owner')
-
-    def __init__(self, email, password):
-        self.email = email
-        self.password = password
+from models import db, User, Blog
 
 @app.before_request
 def require_login():
@@ -81,12 +61,14 @@ def register():
         if not existing_user:
             new_user = User(email, password)
             db.session.add(new_user)
+            db.session.flush()   #from Adnan's example flush session to get id of inserted row
             db.session.commit()
             session['email'] = email
+            #session['user_id'] = new_user.id
             return redirect('/')
         else:
-            # TODO - user better response messaging
-            return "<h1>Duplicate user</h1>"
+            # TODO consider using flash("User already exists")
+            return "<h1>This username is already in use -- choose another</h1>"
 
     return render_template('signup.html')            
 
