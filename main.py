@@ -74,8 +74,33 @@ def register():
         email = request.form['email']
         password = request.form['password']
         verify = request.form['verify']
-        # TODO data validation
+        # TODO START data validation
+        email_error = ''
+        password_error = ''
+        verify_error = ''
+        pw_error = ''
+        
+        if len(password) < 3:
+            password = password
+            password_error = 'Password must contain more than 3characters long, 20 max, minimum 14 recommended'
 
+        if len(verify) < 3:
+            verify = verify
+            verify_error = 'Verification password must contain more than 3 characters long, 20 max, minimum 14 recommended' 
+
+        if len(password) > 20:
+            password = password
+            password_error = 'Password is too long, 20 max, minimum 14 recommended'
+
+        if len(verify) > 20:
+            verify = verify
+            verify_error = 'Verification password is too long, 20 max, minimum 14 recommended'    
+
+        if password != verify:
+            password = password
+            verify = verify
+            pw_error = 'Passwords do not match'
+        # TODO END First section of user validation
         existing_user = User.query.filter_by(email=email).first()
         if not existing_user:
             new_user = User(email, password)
