@@ -38,78 +38,6 @@ def login():
 
     return render_template('login.html')
 
-# TODO start of validation pw needs to be aligned with words password and verification
-
-@app.route("/signup", methods=['POST'])
-def validate_fields():
-    username = request.form["username"]
-    password = request.form["password"]
-    verify = request.form["verify"]
-    email = request.form["email"]
-
-    username_error = ''
-    password_error = ''
-    verify_error = ''
-    pw_error = ''
-    email_error = ''
-
-    if len(username) < 3:
-        username = ''
-        username_error = 'Username must be more than 3 characters'
-    elif len(username) > 20:
-        username = ''
-        username_error = 'Username must be less than 20 characters'
-    else:
-        username = username
-    #https://www.infoworld.com/article/2655121/security/password-size-does-matter.html
-    #https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/password
-    if len(password) < 3:
-        password = password
-        password_error = 'Password must contain more than 3characters long, 20 max, minimum 14 recommended'
-
-    if len(verify) < 3:
-        verify = verify
-        verify_error = 'Verification password must contain more than 3 characters long, 20 max, minimum 14 recommended' 
-
-    if len(password) > 20:
-        password = password
-        password_error = 'Password is too long, 20 max, minimum 14 recommended'
-
-    if len(verify) > 20:
-        verify = verify
-        verify_error = 'Verification password is too long, 20 max, minimum 14 recommended'    
-
-    if password != verify:
-        password = password
-        verify = verify
-        pw_error = 'Passwords do not match'
-
-    #Criteria for email are that it has a single @, a single ., contains no spaces, and is between 3 and 20 characters long
-    if len(email) > 0:
-        if not(email.endswith('@') or email.startswith('@') or email.endswith('.') or email.startswith('.')) and email.count('@') == 1 and email.count('.') == 1:
-            email=email
-        else:
-            email = ''
-            email_error = 'Improperly formed email  -- it must contain an @ sign, only one period, and is between 3 and 20 characters long'
-    else:
-        email = ''
-
-    if username == "":
-        username_error = 'Username must be more than 3 characters but no more than 20'
-    if password == "":
-        password_error = 'Set a password, no fewer than 3 and no longer than 20 characters'
-    if verify == "":
-        verify_error = 'Enter a password to match the one above, no fewer than 3 and no longer than 20 characters'
-
-
-    if not username_error and not password_error and not verify_error and not pw_error and not email_error:
-        return render_template('new_post.html', username = username)
-
-    else:
-        return render_template('signup.html', pw_error=pw_error, username_error=username_error, password_error=password_error, verify_error=verify_error, email_error=email_error,
-        username=username, password=password, email=email)
-# TODO end of validation pw needs to be aligned with words password and verification 
-
 # TODO start compare sessions are defined and decide whether email or user id 
 @app.route('/logout')
 def logout():
@@ -126,6 +54,66 @@ def register():
         verify = request.form['verify']
 
         # TODO - validate user's data
+            # ##### no username for this project relies on email instead
+
+        #username_error = ''
+        password_error = ''
+        verify_error = ''
+        pw_error = ''
+        email_error = ''
+        """
+        if len(username) < 3:
+            username = ''
+            username_error = 'Username must be more than 3 characters'
+        elif len(username) > 20:
+            username = ''
+            username_error = 'Username must be less than 20 characters'
+        else:
+            username = username
+        """    
+        #https://www.infoworld.com/article/2655121/security/password-size-does-matter.html
+        #https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/password
+        if len(password) < 3:
+            password = password
+            password_error = 'Password must contain more than 3characters long, 20 max, minimum 14 recommended'
+
+        if len(verify) < 3:
+            verify = verify
+            verify_error = 'Verification password must contain more than 3 characters long, 20 max, minimum 14 recommended' 
+
+        if len(password) > 20:
+            password = password
+            password_error = 'Password is too long, 20 max, minimum 14 recommended'
+
+        if len(verify) > 20:
+            verify = verify
+            verify_error = 'Verification password is too long, 20 max, minimum 14 recommended'    
+
+        if password != verify:
+            password = password
+            verify = verify
+            pw_error = 'Passwords do not match'
+
+        #Criteria for email are that it has a single @, a single ., contains no spaces, and is between 3 and 20 characters long
+        if len(email) > 0:
+            if not(email.endswith('@') or email.startswith('@') or email.endswith('.') or email.startswith('.')) and email.count('@') == 1 and email.count('.') == 1:
+                email=email
+            else:
+                email = ''
+                email_error = 'Improperly formed email  -- it must contain an @ sign, only one period, and is between 3 and 20 characters long'
+        else:
+            email = ''
+
+        #if username == "":
+            #username_error = 'Username must be more than 3 characters but no more than 20'
+        if password == "":
+            password_error = 'Set a password, no fewer than 3 and no longer than 20 characters'
+        if verify == "":
+            verify_error = 'Enter a password to match the one above, no fewer than 3 and no longer than 20 characters'
+        if not password_error and not verify_error and not pw_error and not email_error:
+            return render_template('new_post.html', email = email)
+
+        # username references removed for this project
 
         existing_user = User.query.filter_by(email=email).first()
         if not existing_user:
