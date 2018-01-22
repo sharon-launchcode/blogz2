@@ -21,13 +21,7 @@ def display_blogs():
     blogs = Blog.query.all()
     return render_template("blog.html")
 
-# TODO investigate whether  make session definitive either email or user id
-@app.before_request
-def require_login():
-    allowed_routes = ['index', 'blog', 'login', 'signup']
-    if request.endpoint not in allowed_routes and 'email' not in session:
-        return redirect('/login')
-# TODO end project uses email as a user so keep session associated with email
+
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
