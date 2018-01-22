@@ -9,18 +9,22 @@
             <td>
                 <input name="email" type="email" value="{{ email }}">
             </td>
+            <td>{{ email_error }}</td>
         </tr>
         <tr>
             <td><label for="password">Password</label></td>
+            
             <td>
                 <input name="password" type="password">
             </td>
+            <td>{{ password_error }}</td>
         </tr>
         <tr>
             <td><label for="verify">Verify Password</label></td>
             <td>
                 <input name="verify" type="password">
             </td>
+            <td>{{ verify_error }}</td>
         </tr>
     </table>
     <input type="submit" value="register">
