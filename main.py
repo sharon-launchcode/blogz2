@@ -10,23 +10,11 @@ app.secret_key = 'y337kGcys&zP3B'
 
 from models import db, User, Blog
 
-@app.route('/', methods=['POST', 'GET'])
-def index():
-
-    if request.method == 'POST':
-        blog_title = request.form['title']
-        new_blog = Blog(blog_title)
-        db.session.add(new_blog)
-        db.session.commit()
-
-    blogs = Blog.query.all()
-    return render_template('blog.html',title="Blog!", blogs=blogs)
-
 @app.before_request
 def require_login():
     allowed_routes = ['index', 'login', 'signup']
     if request.endpoint not in allowed_routes and 'email' not in session:
-        return redirect('/')
+        return redirect('/login')
 
 
 @app.route('/login', methods=['POST', 'GET'])
@@ -121,14 +109,17 @@ def logout():
     return redirect('/')
 
 
-@app.route('/delete-task', methods=['POST'])
-def delete_task():
+@app.route('/blog', methods=['POST', 'GET'])
+def blog_listing():
 
-    task_id = int(request.form['task-id'])
-    task = Task.query.get(task_id)
-    task.completed = True
-    db.session.add(task)
-    db.session.commit()
+    if request.method == 'POST':
+        blog_title = request.form['title']
+        new_blog = Blog(blog_title)
+        db.session.add(new_blog)
+        db.session.commit()
+
+    blogs = Blog.query.all()
+    return render_template('blog.html',title="Blog!", blogs=blogs)
 
 
 @app.route('/signup', methods=['POST', 'GET'])
