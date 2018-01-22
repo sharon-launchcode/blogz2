@@ -9,21 +9,23 @@ class Blog(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(120))
     body = db.Column(db.String(500))
+    owner_id = db.Column(db.Integer,db.ForeignKey('user.id'))
 
-    def __init__(self, title, body):
+    def __init__(self, title, body, owner_id):
         self.title = title
         self.body = body
+        self.owner_id = owner_id
 
 
 class Comment(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.String(500))
-    owner_id = db.Column(db.Integer,db.ForeignKey('user.id'))
+    owner_id1 = db.Column(db.Integer,db.ForeignKey('user.id'))
 
     def __init__(self, text, owner_id):
         self.text = text
-        self.owner_id = owner_id
+        self.owner_id1 = owner_id1
 
 
 class User(db.Model):
