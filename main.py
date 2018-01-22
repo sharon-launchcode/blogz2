@@ -20,9 +20,10 @@ class Blog(db.Model):
 
 @app.route('/blog', methods=['GET'])
 def display_post():
+    posts = Blog.query.all()
     if len(request.args) != 0:
-        writeup_id = request.args.get("id")
-        writeup = Blog.query.get(writeup_id)
+        #writeup_id = request.args.get("id")
+        #writeup = Blog.query.get(writeup_id)
 
         return render_template('writeup.html', writeup=writeup)
 
