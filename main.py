@@ -40,7 +40,7 @@ def index():
 def display_blogs():
     blogs = Blog.query.all()
     return render_template("blog.html")
-    # return Blog.query.all()
+    #return Blog.query.all()
 
 
 
@@ -51,6 +51,7 @@ def login():
         password = request.form['password']
         user = User.query.filter_by(email=email).first()
         if user and user.password == password:
+            # user has logged in
             session['email'] = email
             flash("Logged in")
             return redirect('/')
