@@ -30,13 +30,15 @@ class Blog(db.Model):
 class User(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(100), unique=True)
-    password = db.Column(db.String(100))
-    #comments = db.relationship('Blog', backref='owner')
+    email = db.Column(db.String(50), unique=True)
+    password = db.Column(db.String(50))
+    username = db.Column(db.String(25), unique=True)
+    blogs = db.relationship('Blog', backref='owner')
 
-    def __init__(self, email, password):
+    def __init__(self, email, password, username):
         self.email = email
         self.password = password
+        self.username = username
 
 @app.route("/")
 def index():
@@ -50,12 +52,6 @@ def require_login():
        loggedin_flag = False
     else:
        loggedin_flag = True   
-
-@app.route("/blog", methods=['GET'])
-def display_blogs():
-    blogs = Blog.query.all()
-    return render_template("blog.html", blogs=blogs)
-    #return Blog.query.all()
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
@@ -79,10 +75,22 @@ def login():
 # TODO start compare sessions are defined and decide whether email or user id 
 @app.route('/logout')
 def logout():
-    del session['email']
-   # del session['user_id']
-    return redirect('/')
+    if  'email' in session:
+        del session['email']
+        loggedin_flag = False
+        flash('You are logged out')
+        return render_template('login.html')
+    else:
+        loggedin_flag = True
+        flash('You are still logged in')
+        return render_template('logout.html')
 # TODO end for this project use email associated with session email is used as a user ide
+
+@app.route("/blog", methods=['GET'])
+def display_blogs():
+    blogs = Blog.query.all()
+    return render_template("blog.html", blogs=blogs)
+    #return Blog.query.all()
 
 @app.route('/signup', methods=['POST', 'GET'])
 def register():
