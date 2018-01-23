@@ -42,6 +42,14 @@ class User(db.Model):
 def index():
     return render_template("index.html")
 
+@app.before_request
+def require_login():
+    loggedin_flag = False
+    if 'email' not in session:
+       loggedin_flag = False
+    else:
+       loggedin_flag = True   
+
 @app.route("/blog", methods=['GET'])
 def display_blogs():
     blogs = Blog.query.all()

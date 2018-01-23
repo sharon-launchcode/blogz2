@@ -3,8 +3,18 @@
 
 <h1>Your Blogz</h1>
 
+{% if loggedin_flag == False %}
+<p>You are not logged in</p>
+{% else %}
 
-<h1>Welcome</h1>
+<p>You are logged in</p>
+
+{% endif %}
+
+
+
+
+<h2>Welcome</h2>
 
 
 
