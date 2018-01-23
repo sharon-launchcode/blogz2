@@ -36,10 +36,10 @@ class User(db.Model):
 def index():
     return render_template("index.html")
 
-@app.route("/blog")
+@app.route("/blog", methods=['GET'])
 def display_blogs():
     blogs = Blog.query.all()
-    return render_template("blog.html")
+    return render_template("blog.html", blogs=blogs)
     #return Blog.query.all()
 
 @app.route('/login', methods=['POST', 'GET'])
