@@ -97,7 +97,7 @@ def register():
             return redirect('/newpost')
         else:
             # TODO consider using flash("User already exists")
-            return "<h1>This username is already in use -- choose another</h1>"
+            return render_template('signup.html', email_error=email_error, password_error=password_error, verify_error=verify_error)
 
     return render_template('signup.html')            
 
