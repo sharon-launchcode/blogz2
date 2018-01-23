@@ -68,7 +68,7 @@ def login():
 @app.route('/logout')
 def logout():
     del session['email']
-    #del session['user_id']
+   # del session['user_id']
     return redirect('/')
 # TODO end for this project use email associated with session email is used as a user ide
 
