@@ -107,15 +107,16 @@ def new_post():
     if request.method == 'POST':
         title = request.form['title']
         body = request.form['body']
+        owner_id = request.form['owner_id']
 
         if title == "" or body == "":
             if title == "":
                 title_error = "Please enter a title"
             if body == "":
                 body_error = "Please enter a post body"
-            return render_template('/newpost.html', title=title, body=body, title_error=title_error, body_error=body_error)
+            return render_template('/newpost.html', title=title, body=body, title_error=title_error, body_error=body_error, owner_id=owner_id)
         else:
-            post = Blog(title, body)
+            post = Blog(title, body, owner_id)
             db.session.add(post)
             db.session.commit()
 

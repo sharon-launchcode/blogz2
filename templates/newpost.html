@@ -3,13 +3,14 @@
 {% block content %}
     <h1>New Post!</h1>
     <form method='post'>
+        <input type="hidden" name="owner_id" value="{{owner_id}}" />
         <label>
-            Title for Your New Post:
+            Title for Your New Blog:
             <input type="text" name='title' value="{{title}}" />
         </label>
         <label>
-            Your Post:
-            <input type="textarea" name='body' value="{{body}}" />
+            Your Blog:
+            <textarea  name='body' value="{{body}}" />
         </label>
 
         <input type="submit" value='Add Post' />
@@ -17,15 +18,15 @@
 
     <hr />
 
-    {% if posts|length == 0 %}
-    <p>No post yet</p>
+    {% if blogs|length == 0 %}
+    <p>No blog yet</p>
     {% else %}
 
         <ul>
             {% for post in posts %}
             <li>{{post.name}}
                 <form method="POST" action="/delete-post" style="display:inline-block;">
-                    <input type="hidden" name="post-id" value="{{post.id}}" />
+                    <input type="hidden" name="owner_id" value="{{blog.owner_id}}" />
                     <input type="submit" value="Done!" />
                 </form>
             </li>
