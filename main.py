@@ -101,10 +101,15 @@ def register():
        
         loggedin_flag = False
 
+        username = request.form['username']
         email = request.form['email']
         password = request.form['password']
         verify = request.form['verify']
         
+        if username == "":
+            username_error = "username cannot be blank"
+        elif (len(password)) < 8:
+            username_error = "username has to be at least 8 characters long"
 
         if password == "":
             password_error = "Password cannot be blank"
@@ -115,7 +120,7 @@ def register():
 
         existing_user = User.query.filter_by(email=email).first()
         if not existing_user and not password_error and not verify_error:
-            new_user = User(email, password)
+            new_user = User(email, password, username)
             db.session.add(new_user)
             db.session.flush()   #from Adnan's example flush session to get id of inserted row
             db.session.commit()
