@@ -150,7 +150,7 @@ def new_post():
                 body_error = "Please enter a post body"
             return render_template('/newpost.html', title=title, body=body, title_error=title_error, body_error=body_error, owner_id=owner_id)
         else:
-            post = Blog(title, body, owner_id)
+            post = Blog(title, body, owner_id, pub_date)
             db.session.add(post)
             db.session.commit()
 
@@ -160,6 +160,24 @@ def new_post():
     return render_template('/newpost.html')
 
 @app.route('/newpost', methods=['POST', 'GET'])        
+
+@app.route('/singleUser', methods=['POST', 'GET'])
+def singleUser():
+
+    owner = User.query.filter_by(email=session['email']).first()
+
+    if request.method == 'POST':
+        blog_name = request.form['blog']   
+        new_blog = Task(blog_name, owner)
+        db.session.add(new_blog)
+        db.session.commit()
+
+    blogs = Blog.query.filter_by(owner=owner).all()
+    return render_template('singleUser.html', title="Your Blog!", 
+        blogs=blogs)
+
+
+
 
 # TODO add delete only if logged in
 @app.route('/delete-blog', methods=['POST'])
