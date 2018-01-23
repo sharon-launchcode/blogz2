@@ -78,7 +78,8 @@ def register():
         email_error = ''
         password_error = ''
         verify_error = ''
-        pw_error = ''
+       
+        loggedin_flag = False
 
         email = request.form['email']
         password = request.form['password']
@@ -99,6 +100,7 @@ def register():
             db.session.flush()   #from Adnan's example flush session to get id of inserted row
             db.session.commit()
             session['email'] = email
+            loggedin_flag = True
             #session['user_id'] = new_user.id
             return redirect('/newpost')
         else:
