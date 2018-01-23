@@ -10,11 +10,16 @@ class Blog(db.Model):
     title = db.Column(db.String(120))
     body = db.Column(db.String(500))
     owner_id = db.Column(db.Integer,db.ForeignKey('user.id'))
+    pub_date = db.Column(db.DateTime)
+    # http://flask-sqlalchemy.pocoo.org/2.1/quickstart/#simple-relationships
 
-    def __init__(self, title, body, owner_id):
+    def __init__(self, title, body, owner_id, pub_date):
         self.title = title
         self.body = body
         self.owner_id = owner_id
+        if pub_date is None:
+            pub_date = datetime.utcnow()
+        self.pub_date = pub_date
 
 # TODO below class Comment not incorporated into project hold this example for possible meta use
 class Comment(db.Model):

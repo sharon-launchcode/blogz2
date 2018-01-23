@@ -1,5 +1,6 @@
 from flask import Flask, request, redirect, render_template, session, flash
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
@@ -15,11 +16,16 @@ class Blog(db.Model):
     title = db.Column(db.String(120))
     body = db.Column(db.String(500))
     owner_id = db.Column(db.Integer,db.ForeignKey('user.id'))
+    pub_date = db.Column(db.DateTime)
+    # http://flask-sqlalchemy.pocoo.org/2.1/quickstart/#simple-relationships
 
-    def __init__(self, title, body, owner_id):
+    def __init__(self, title, body, owner_id, pub_date):
         self.title = title
         self.body = body
         self.owner_id = owner_id
+        if pub_date is None:
+            pub_date = datetime.utcnow()
+        self.pub_date = pub_date
 
 class User(db.Model):
 
@@ -108,6 +114,7 @@ def new_post():
         title = request.form['title']
         body = request.form['body']
         owner_id = request.form['owner_id']
+        pub_date = datetime.utcnow()
 
         if title == "" or body == "":
             if title == "":
