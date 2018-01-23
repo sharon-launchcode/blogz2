@@ -69,56 +69,32 @@ def logout():
 @app.route('/signup', methods=['POST', 'GET'])
 def register():
     if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
-        verify = request.form['verify']
-        # TODO START data validation
         email_error = ''
         password_error = ''
         verify_error = ''
         pw_error = ''
+
+        email = request.form['email']
+        password = request.form['password']
+        verify = request.form['verify']
         
-        if len(password) < 3:
-            password = password
-            password_error = 'Password must contain more than 3characters long, 20 max, minimum 14 recommended'
 
-        if len(verify) < 3:
-            verify = verify
-            verify_error = 'Verification password must contain more than 3 characters long, 20 max, minimum 14 recommended' 
+        if password == "":
+            password_error = "Password cannot be blank"
+        elif (len(password)) < 3:
+            password_error = "Password has to be at least 3 characters long"
+        elif password != verify:
+            verify_error = "Passwords do not match"
 
-        if len(password) > 20:
-            password = password
-            password_error = 'Password is too long, 20 max, minimum 14 recommended'
-
-        if len(verify) > 20:
-            verify = verify
-            verify_error = 'Verification password is too long, 20 max, minimum 14 recommended'    
-
-        if password != verify:
-            password = password
-            verify = verify
-            pw_error = 'Passwords do not match'
-
-        if len(email) > 0:
-            if not(email.endswith('@') or email.startswith('@') or email.endswith('.') or email.startswith('.')) and email.count('@') == 1 and email.count('.') == 1:
-                email=email
-            else:
-                email = ''
-                email_error = 'Email must contain @/. but not start or end with those characters'
-        else:
-            email = ''
-
-
-        # TODO END First section of user validation
         existing_user = User.query.filter_by(email=email).first()
-        if not existing_user:
+        if not existing_user and not password_error and not verify_error:
             new_user = User(email, password)
             db.session.add(new_user)
             db.session.flush()   #from Adnan's example flush session to get id of inserted row
             db.session.commit()
             session['email'] = email
             #session['user_id'] = new_user.id
-            return redirect('/')
+            return redirect('/newpost')
         else:
             # TODO consider using flash("User already exists")
             return "<h1>This username is already in use -- choose another</h1>"
