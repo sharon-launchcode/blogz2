@@ -42,8 +42,6 @@ def display_blogs():
     return render_template("blog.html")
     #return Blog.query.all()
 
-
-
 @app.route('/login', methods=['POST', 'GET'])
 def login():
     if request.method == 'POST':
@@ -100,6 +98,17 @@ def register():
             password = password
             verify = verify
             pw_error = 'Passwords do not match'
+
+        if len(email) > 0:
+            if not(email.endswith('@') or email.startswith('@') or email.endswith('.') or email.startswith('.')) and email.count('@') == 1 and email.count('.') == 1:
+                email=email
+            else:
+                email = ''
+                email_error = 'Email must contain @/. but not start or end with those characters'
+        else:
+            email = ''
+
+
         # TODO END First section of user validation
         existing_user = User.query.filter_by(email=email).first()
         if not existing_user:
