@@ -140,7 +140,8 @@ def new_post():
     if request.method == 'POST':
         title = request.form['title']
         body = request.form['body']
-        owner_id = request.form['owner_id']
+        #owner = User.query.filter_by(username=session['username']).first()
+        owner = User.query.filter_by(email=session['email']).first()
         pub_date = datetime.utcnow()
 
         if title == "" or body == "":
@@ -150,12 +151,15 @@ def new_post():
                 body_error = "Please enter a post body"
             return render_template('/newpost.html', title=title, body=body, title_error=title_error, body_error=body_error, owner_id=owner_id)
         else:
-            post = Blog(title, body, owner_id, pub_date)
+            post = Blog(title, body, owner.id, pub_date)
             db.session.add(post)
             db.session.commit()
-
-            body_id = str(post.id)
-            return redirect("/blog?id=" + body_id)
+            blog = Blog.query.order_by('-id').first()
+            #the hyphen beofre the id is a wildcard for the page page
+            query_param_url = "/blog?id=" + str(blog.id)
+            #body_id = str(post.id)
+            #return redirect("/blog?id=" + body_id)
+            return redirect(query_param_url)
 
     return render_template('/newpost.html')
 
